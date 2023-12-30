@@ -47,20 +47,20 @@ void addRLEData(RLECollection *collection, int data) {
 
 // given an offset, it finds the correct data in the collection
 int getRLEDataAt(RLECollection *collection, int offset) {
-  if (offset < 0) {
+  if (offset < 0 || collection->entities == NULL) {
     return -1;
   }
   int collectionOffset = 0, totalTraversed = 0;
-  struct rle_entity current = collection->entities[collectionOffset];
-  while (offset > current.count + totalTraversed) {
-    totalTraversed += current.count;
-    collectionOffset += 1;
-    if (collectionOffset >= collection->count) {
+  struct rle_entity *current = collection->entities;
+  struct rle_entity *last = collection->entities + collection->count - 1;
+  while (offset > current->count + totalTraversed) {
+    totalTraversed += current->count;
+    current++;
+    if (current > last) {
       // printf("RLE warning: Invalid RLE index access %d. Size is %d", offset,
       //        collection->count);
       return -1;
     }
-    current = collection->entities[collectionOffset];
   }
-  return current.data;
+  return current->data;
 }
