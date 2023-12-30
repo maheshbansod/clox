@@ -15,32 +15,30 @@ void freeRLECollection(RLECollection *collection) {
   initRLECollection(collection);
 }
 
-void writeRLECollection(RLECollection *collection, struct rle_entity *value) {
+void writeRLECollection(RLECollection *collection, int data, int count) {
   if (collection->capacity < collection->count + 1) {
     int oldCapacity = collection->capacity;
     collection->capacity = GROW_CAPACITY(oldCapacity);
-    collection->entities = GROW_ARRAY(struct rle_entity *, collection->entities,
+    collection->entities = GROW_ARRAY(struct rle_entity, collection->entities,
                                       oldCapacity, collection->capacity);
   }
 
-  collection->entities[collection->count] = value;
+  collection->entities[collection->count].data = data;
+  collection->entities[collection->count].count = count;
   collection->count++;
 }
 
 static void addNewRLEEntity(RLECollection *collection, int data) {
-  struct rle_entity *newEntity = malloc(sizeof(struct rle_entity));
-  newEntity->count = 1;
-  newEntity->data = data;
-  writeRLECollection(collection, newEntity);
+  writeRLECollection(collection, data, 1);
 }
 
 void addRLEData(RLECollection *collection, int data) {
   if (collection->count == 0) {
     addNewRLEEntity(collection, data);
   } else {
-    struct rle_entity *lastEntity = collection->entities[collection->count - 1];
-    if (lastEntity->data == data) {
-      lastEntity->count += 1;
+    struct rle_entity lastEntity = collection->entities[collection->count - 1];
+    if (lastEntity.data == data) {
+      lastEntity.count += 1;
     } else {
       addNewRLEEntity(collection, data);
     }
@@ -53,9 +51,9 @@ int getRLEDataAt(RLECollection *collection, int offset) {
     return -1;
   }
   int collectionOffset = 0, totalTraversed = 0;
-  struct rle_entity *current = collection->entities[collectionOffset];
-  while (offset > current->count + totalTraversed) {
-    totalTraversed += current->count;
+  struct rle_entity current = collection->entities[collectionOffset];
+  while (offset > current.count + totalTraversed) {
+    totalTraversed += current.count;
     collectionOffset += 1;
     if (collectionOffset >= collection->count) {
       // printf("RLE warning: Invalid RLE index access %d. Size is %d", offset,
@@ -64,5 +62,5 @@ int getRLEDataAt(RLECollection *collection, int offset) {
     }
     current = collection->entities[collectionOffset];
   }
-  return current->data;
+  return current.data;
 }

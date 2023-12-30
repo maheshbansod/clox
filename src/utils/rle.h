@@ -9,7 +9,7 @@ struct rle_entity {
 typedef struct {
   int capacity;
   int count;
-  struct rle_entity **entities;
+  struct rle_entity *entities;
 } RLECollection;
 
 /** Get entity at a particular offset */
