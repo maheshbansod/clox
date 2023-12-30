@@ -1,6 +1,6 @@
 
 #include "chunk.h"
-#include "memory.h"
+#include "utils/memory.h"
 #include "value.h"
 
 void initChunk(Chunk *chunk) {
