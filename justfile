@@ -4,5 +4,5 @@ build:
 	@mkdir -p target
 	clang ./src/*.c -o target/clox
 
-run:
+run: build
 	./target/clox
