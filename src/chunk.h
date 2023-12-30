@@ -2,6 +2,7 @@
 #define clox_chunk_h
 
 #include "common.h"
+#include "utils/rle.h"
 #include "value.h"
 #include <stdint.h>
 
@@ -14,7 +15,7 @@ typedef struct {
   int capacity;
   int count;
   uint8_t *code;
-  int *lines;
+  RLECollection lines;
   ValueArray constants;
 } Chunk;
 
@@ -23,5 +24,8 @@ void freeChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t byte, int line);
 
 int addConstant(Chunk *chunk, Value value);
+
+// given index of the instruction, this function returns the line number
+int getLine(Chunk *chunk, int offset);
 
 #endif

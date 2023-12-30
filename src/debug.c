@@ -24,14 +24,22 @@ int constantInstruction(const char *name, Chunk *chunk, int offset) {
   return offset + 2;
 }
 
+void printLine(Chunk *chunk, int offset) {
+  int currentLine = getLine(chunk, offset);
+  if (offset > 0) {
+    int previousLine = getLine(chunk, offset - 1);
+    if (currentLine == previousLine) {
+      printf("   | ");
+      return;
+    }
+  }
+  printf("%4d ", currentLine);
+}
+
 int disassembleInstruction(Chunk *chunk, int offset) {
   printf("%04d ", offset);
 
-  if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1]) {
-    printf("   | ");
-  } else {
-    printf("%4d ", chunk->lines[offset]);
-  }
+  printLine(chunk, offset);
 
   uint8_t instruction = chunk->code[offset];
   switch (instruction) {
