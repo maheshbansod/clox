@@ -2,7 +2,7 @@ alias b := build
 
 build:
 	@mkdir -p target
-	clang *.c -o target/clox
+	clang ./src/*.c -o target/clox
 
 run:
 	./target/clox
