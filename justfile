@@ -1,10 +1,11 @@
 alias b := build
 
 SOURCES := `echo $(find . -type f -name "*.c")`
+CC := 'clang'
 
 build:
 	@mkdir -p target
-	clang {{SOURCES}} -o target/clox
+	{{CC}} {{SOURCES}} -o target/clox
 
 run: build
 	./target/clox
