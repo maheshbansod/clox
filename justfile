@@ -2,7 +2,7 @@ alias b := build
 
 # can be configured based on user's system / preferences
 CC := 'clang'
-BUILD_PARAMS := '-Weverything' # clang only flag for most warnings
+BUILD_PARAMS := '-Wall'
 DEBUG_BUILD_PARAMS := '-g'
 
 SOURCES := `echo $(find . -type f -name "*.c")`

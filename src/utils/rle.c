@@ -50,7 +50,7 @@ int getRLEDataAt(RLECollection *collection, int offset) {
   if (offset < 0 || collection->entities == NULL) {
     return -1;
   }
-  int collectionOffset = 0, totalTraversed = 0;
+  int totalTraversed = 0;
   struct rle_entity *current = collection->entities;
   struct rle_entity *last = collection->entities + collection->count - 1;
   while (offset > current->count + totalTraversed) {
