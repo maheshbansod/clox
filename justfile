@@ -2,10 +2,14 @@ alias b := build
 
 SOURCES := `echo $(find . -type f -name "*.c")`
 CC := 'clang'
+DEBUG_BUILD_PARAMS := '-g'
 
-build:
+build params='':
 	@mkdir -p target
-	{{CC}} {{SOURCES}} -o target/clox
+	{{CC}} {{params}} {{SOURCES}} -o target/clox
 
-run: build
-	./target/clox
+run args='': build
+	./target/clox {{args}}
+
+debug args='': (build '-g')
+	gdb ./target/clox
