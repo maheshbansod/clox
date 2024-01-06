@@ -2,7 +2,7 @@
 #define clox_chunk_h
 
 #include "common.h"
-#include "utils/rle.h"
+#include "rle.h"
 #include "value.h"
 #include <stdint.h>
 

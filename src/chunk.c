@@ -1,7 +1,7 @@
 
 #include "chunk.h"
-#include "utils/memory.h"
-#include "utils/rle.h"
+#include "memory.h"
+#include "rle.h"
 #include "value.h"
 #include <stdio.h>
 
