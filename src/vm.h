@@ -16,7 +16,7 @@ typedef struct {
 
 typedef enum {
   INTERPRET_OK,
-  INTERPERT_RUNTIME_ERROR,
+  INTERPRET_RUNTIME_ERROR,
   INTERPRET_COMPILE_ERROR
 } InterpretResult;
 
