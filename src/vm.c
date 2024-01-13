@@ -109,6 +109,9 @@ static InterpretResult run() {
     case OP_TRUE:
       push(BOOL_VAL(true));
       break;
+    case OP_POP:
+      pop();
+      break;
     case OP_EQUAL: {
       Value b = pop();
       Value a = pop();
@@ -155,6 +158,10 @@ static InterpretResult run() {
       }
       push(NUMBER_VAL(-AS_NUMBER(pop())));
       break;
+    case OP_PRINT:
+      printValue(pop());
+      printf("\n");
+      break;
     case OP_RETURN:
       printValue(pop());
       printf("\n");
@@ -170,6 +177,7 @@ static InterpretResult run() {
 InterpretResult interpret(const char *source) {
   Chunk chunk;
   initChunk(&chunk);
+  initVM();
   if (!compile(source, &chunk)) {
     freeChunk(&chunk);
     return INTERPRET_COMPILE_ERROR;
@@ -180,6 +188,7 @@ InterpretResult interpret(const char *source) {
 
   InterpretResult result = run();
 
+  freeVM();
   freeChunk(&chunk);
   return result;
 }
