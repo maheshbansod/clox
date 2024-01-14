@@ -137,6 +137,7 @@ static ParseRule *getRule(TokenType type);
 
 static void declaration();
 static void statement();
+static void expression();
 
 static void parsePrecedence(Precedence precedence) {
   advance();
@@ -179,7 +180,12 @@ static void string() {
 
 static void namedVariable(Token name) {
   uint8_t arg = identifierConstant(&name);
-  emitBytes(OP_GET_GLOBAL, arg);
+  if (match(TOKEN_EQUAL)) {
+    expression();
+    emitBytes(OP_SET_GLOBAL, arg);
+  } else {
+    emitBytes(OP_GET_GLOBAL, arg);
+  }
 }
 
 static void variable() { namedVariable(parser.previous); }
