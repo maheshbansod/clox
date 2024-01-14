@@ -181,8 +181,8 @@ static InterpretResult run() {
       printf("\n");
       break;
     case OP_RETURN:
-      printValue(pop());
-      printf("\n");
+      // printValue(pop());
+      // printf("\n");
       return INTERPRET_OK;
     }
   }
@@ -196,7 +196,6 @@ static InterpretResult run() {
 InterpretResult interpret(const char *source) {
   Chunk chunk;
   initChunk(&chunk);
-  initVM();
   if (!compile(source, &chunk)) {
     freeChunk(&chunk);
     return INTERPRET_COMPILE_ERROR;
@@ -207,7 +206,6 @@ InterpretResult interpret(const char *source) {
 
   InterpretResult result = run();
 
-  freeVM();
   freeChunk(&chunk);
   return result;
 }
