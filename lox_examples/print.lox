@@ -1,1 +1,5 @@
-print "hello, warudo";
+var h = "hello";
+var m = "moshi";
+var w = "warudo";
+var fullSentence = m + " " + m + "! " + h + " " + w + "!";
+print fullSentence;
