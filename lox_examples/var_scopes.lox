@@ -1,0 +1,16 @@
+print "expect only true to be printed";
+var x = 1;
+print x == 1;
+
+{
+	var x = 2;
+	print x == 2;
+	{
+		print x == 2;
+
+		var x = 3;
+		print x == 3;
+	}
+	print x == 2;
+}
+print x == 1;
