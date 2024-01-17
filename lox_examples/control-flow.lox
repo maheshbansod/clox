@@ -1,0 +1,8 @@
+
+var foo = "foo";
+var bar = "bar";
+
+if (foo == "foo") print "foo is foo";
+if (foo != bar) print "foo is not bar";
+if (foo == bar) print "eh is foo bar? fix this";
+else print "yup foo is not bar";
