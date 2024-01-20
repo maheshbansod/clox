@@ -6,3 +6,8 @@ while (n <= 10) {
 	print n;
 	n = n + 1;
 }
+
+print "count to 10 with for";
+for (var n = 1; n <= 10; n = n + 1) {
+	print n;
+}

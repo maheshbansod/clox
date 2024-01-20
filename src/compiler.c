@@ -186,6 +186,9 @@ static void declaration();
 static void statement();
 static void expression();
 
+static void beginScope();
+static void endScope();
+
 static void parsePrecedence(Precedence precedence) {
   advance();
   ParseFn prefixRule = getRule(parser.previous.type)->prefix;
@@ -371,7 +374,7 @@ static void ifStatement() {
 
 static void whileStatement() {
   int loopStart = currentChunk()->count;
-  consume(TOKEN_LEFT_PAREN, "Expect '(' after 'if'.");
+  consume(TOKEN_LEFT_PAREN, "Expect '(' after 'while'.");
   expression();
   consume(TOKEN_RIGHT_PAREN, "Expect ')' after condition.");
 
@@ -381,6 +384,52 @@ static void whileStatement() {
   emitLoop(loopStart);
   patchJump(exitJump);
   emitByte(OP_POP);
+}
+
+static void forStatement() {
+  beginScope();
+  consume(TOKEN_LEFT_PAREN, "Expect '(' after 'for'.");
+  // initializer
+  if (match(TOKEN_SEMICOLON)) {
+    // no init
+  } else if (match(TOKEN_VAR)) {
+    varDeclaration();
+  } else {
+    expressionStatement();
+  }
+
+  int loopStart = currentChunk()->count;
+  int exitJump = -1;
+  // condition
+  if (!check(TOKEN_SEMICOLON)) {
+    expression();
+    consume(TOKEN_SEMICOLON, "Expect ';' to separate condition in for loop.");
+
+    exitJump = emitJump(OP_JUMP_IF_FALSE);
+    emitByte(OP_POP);
+  }
+
+  // incr/decr
+  if (!match(TOKEN_RIGHT_PAREN)) {
+    int bodyJump = emitJump(OP_JUMP);
+    int incrementStart = currentChunk()->count;
+    expression();
+    consume(TOKEN_RIGHT_PAREN, "Expect ')' after condition.");
+    emitByte(OP_POP);
+
+    emitLoop(loopStart);
+    loopStart = incrementStart;
+    patchJump(bodyJump);
+  }
+
+  statement();
+
+  emitLoop(loopStart);
+  if (exitJump != -1) {
+    patchJump(exitJump);
+    emitByte(OP_POP);
+  }
+  endScope();
 }
 
 static void printStatement() {
@@ -450,6 +499,8 @@ static void statement() {
     ifStatement();
   } else if (match(TOKEN_WHILE)) {
     whileStatement();
+  } else if (match(TOKEN_FOR)) {
+    forStatement();
   } else if (match(TOKEN_LEFT_BRACE)) {
     beginScope();
     block();
