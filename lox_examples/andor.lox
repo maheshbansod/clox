@@ -1,0 +1,14 @@
+
+print "true or false = true";
+print true or false;
+
+var a = 1;
+print "a or (a=2)";
+a or (a=2);
+print "a should be 1";
+print a;
+
+print "a and (a=2)";
+a and (a=2);
+print "a should be 2";
+print a;
