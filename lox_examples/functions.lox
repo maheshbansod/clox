@@ -1,0 +1,16 @@
+fun test() { print "hello fun!"; }
+
+print test;
+
+fun fib(n) {
+  if (n < 2) return n;
+  return fib(n - 2) + fib(n - 1);
+}
+
+print "starting fibonacci for n = ";
+var n = 10;
+print n;
+var start = clock();
+print fib(n);
+print "Done in";
+print clock() - start;
