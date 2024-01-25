@@ -242,8 +242,38 @@ static InterpretResult run() {
         double b = AS_NUMBER(pop());
         double a = AS_NUMBER(pop());
         push(NUMBER_VAL(a + b));
+      } else if (IS_NUMBER(peek(0)) && IS_STRING(peek(1))) {
+        double b = AS_NUMBER(pop());
+        ObjString *a = AS_STRING(pop());
+
+        char numBuffer[50];
+        int numlen = snprintf(numBuffer, 50, "%g", b);
+
+        int length = a->length + numlen;
+        char *chars = ALLOCATE(char, length + 1);
+        memcpy(chars, a->chars, a->length);
+        snprintf(chars + a->length, numlen + 1, "%g", b);
+        chars[length] = '\0';
+
+        ObjString *result = takeString(chars, length);
+        push(OBJ_VAL(result));
+      } else if (IS_STRING(peek(0)) && IS_NUMBER(peek(1))) {
+        ObjString *b = AS_STRING(pop());
+        double a = AS_NUMBER(pop());
+
+        char numBuffer[50];
+        int numlen = snprintf(numBuffer, 50, "%g", a);
+
+        int length = b->length + numlen;
+        char *chars = ALLOCATE(char, length + 1);
+        snprintf(chars, numlen + 1, "%g", a);
+        memcpy(chars + numlen, b->chars, b->length);
+        chars[length] = '\0';
+
+        ObjString *result = takeString(chars, length);
+        push(OBJ_VAL(result));
       } else {
-        runtimeError("Operands must be two numbers or two strings.");
+        runtimeError("Operands must be either numbers or strings.");
         return INTERPRET_RUNTIME_ERROR;
       }
       break;
