@@ -1,0 +1,58 @@
+fun outer() {
+  var x = "outside";
+  fun inner() {
+    print x;
+  }
+  inner();
+}
+outer();
+
+fun test(x) {
+	if (x == 4) {
+	print "x is four";
+	} else {
+	print "x is " + x;
+	}
+}
+
+fun createVector(x0, y0) {
+	var x = x0;
+	var y = y0;
+
+	fun asString() {
+		return "<" + x + "," + y + ">";
+	}
+	fun getX() {
+		return x;
+	}
+	fun getY() {
+		return y;
+	}
+	fun adder(vec2) {
+		return createVector(x + vec2("x"), y + vec2("y"));
+	}
+	fun vector(method) {
+		if (method == "as_string") {
+			return asString();
+		} else if (method == "x") {
+			return getX();
+		} else if (method == "y") {
+			return getY();
+		} else if (method == "add") {
+			return adder;
+		}
+	}
+	return vector;
+}
+
+var v1 = createVector(3, 4);
+
+print "x = " + v1("x") + ", y = " + v1("y");
+print "v1: " + v1("as_string");
+
+var v2 = createVector(1, 2);
+print "v2: " + v2("as_string");
+print "adding";
+print "result: " + v1("add")(v2)("as_string");
+
+
