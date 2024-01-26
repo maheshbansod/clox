@@ -61,6 +61,14 @@ static void defineNative(const char *name, NativeFn function) {
 void initVM() {
   resetStack();
   vm.objects = NULL;
+
+  vm.bytesAllocated = 0;
+  vm.nextGC = 1024 * 1024;
+
+  vm.grayCount = 0;
+  vm.grayCapacity = 0;
+  vm.grayStack = NULL;
+
   initTable(&vm.globals);
   initTable(&vm.strings);
 
@@ -155,8 +163,8 @@ static bool isFalsey(Value value) {
 }
 
 static void concatenate() {
-  ObjString *b = AS_STRING(pop());
-  ObjString *a = AS_STRING(pop());
+  ObjString *b = AS_STRING(peek(0));
+  ObjString *a = AS_STRING(peek(1));
 
   int length = a->length + b->length;
   char *chars = ALLOCATE(char, length + 1);
@@ -165,6 +173,8 @@ static void concatenate() {
   chars[length] = '\0';
 
   ObjString *result = takeString(chars, length);
+  pop();
+  pop();
   push(OBJ_VAL(result));
 }
 
@@ -285,8 +295,8 @@ static InterpretResult run() {
         double a = AS_NUMBER(pop());
         push(NUMBER_VAL(a + b));
       } else if (IS_NUMBER(peek(0)) && IS_STRING(peek(1))) {
-        double b = AS_NUMBER(pop());
-        ObjString *a = AS_STRING(pop());
+        double b = AS_NUMBER(peek(0));
+        ObjString *a = AS_STRING(peek(1));
 
         char numBuffer[50];
         int numlen = snprintf(numBuffer, 50, "%g", b);
@@ -298,10 +308,12 @@ static InterpretResult run() {
         chars[length] = '\0';
 
         ObjString *result = takeString(chars, length);
+        pop();
+        pop();
         push(OBJ_VAL(result));
       } else if (IS_STRING(peek(0)) && IS_NUMBER(peek(1))) {
-        ObjString *b = AS_STRING(pop());
-        double a = AS_NUMBER(pop());
+        ObjString *b = AS_STRING(peek(0));
+        double a = AS_NUMBER(peek(1));
 
         char numBuffer[50];
         int numlen = snprintf(numBuffer, 50, "%g", a);
@@ -313,6 +325,8 @@ static InterpretResult run() {
         chars[length] = '\0';
 
         ObjString *result = takeString(chars, length);
+        pop();
+        pop();
         push(OBJ_VAL(result));
       } else {
         runtimeError("Operands must be either numbers or strings.");
