@@ -41,7 +41,7 @@ static void runtimeError(const char *format, ...) {
     int line = getLine(&frame->closure->function->chunk, instruction);
     fprintf(stderr, "[line %d] in ", line);
     if (function->name == NULL) {
-      fprintf(stderr, "script");
+      fprintf(stderr, "script\n");
     } else {
       fprintf(stderr, "%s()\n", function->name->chars);
     }
