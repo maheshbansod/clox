@@ -12,7 +12,7 @@ Run `just --list` to see the supported operations.
 ## Running
 This command will build and run the project.
 ```
-just run
+just run [args]
 ```
 
 ## LICENSE
