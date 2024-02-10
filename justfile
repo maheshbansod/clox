@@ -10,6 +10,10 @@ build params='':
 	@mkdir -p target
 	{{CC}} {{BUILD_PARAMS}} {{params}} {{SOURCES}} -o target/clox
 
+# profile - generates gmon.out
+profile args='': (build '-pg')
+	./target/clox {{args}}
+
 # run after building
 run args='': build
 	./target/clox {{args}}
