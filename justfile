@@ -14,6 +14,9 @@ build params='':
 run args='': build
 	./target/clox {{args}}
 
+run-log args='': (build '-DENABLE_DEBUG_CLOX')
+	./target/clox {{args}}
+
 # debug (after build)
 debug args='': (build '-g')
 	gdb ./target/clox
